@@ -380,6 +380,9 @@ public class MySqlValueConverters extends JdbcValueConverters {
             return null;
         }
         String encoding = MySqlConnection.getJavaEncodingForMysqlCharSet(mySqlCharsetName);
+        if (encoding.equals("WINDOWS-1252") && mySqlCharsetName.equals("latin1")) {
+            encoding = "ISO8859_1";
+        }
         if (encoding == null) {
             logger.debug(
                     "Column uses MySQL character set '{}', which has no mapping to a Java character set, will try it in lowercase",
