@@ -476,17 +476,16 @@ public final class RowDataDebeziumDeserializeSchema
             @Override
             public Object convert(Object dbzObj, Schema schema) {
                 if (dbzObj instanceof Long) {
-                    switch (schema.name()) {
-                        case Timestamp.SCHEMA_NAME:
-                            return TimestampData.fromEpochMillis((Long) dbzObj);
-                        case MicroTimestamp.SCHEMA_NAME:
-                            long micro = (long) dbzObj;
-                            return TimestampData.fromEpochMillis(
-                                    micro / 1000, (int) (micro % 1000 * 1000));
-                        case NanoTimestamp.SCHEMA_NAME:
-                            long nano = (long) dbzObj;
-                            return TimestampData.fromEpochMillis(
-                                    nano / 1000_000, (int) (nano % 1000_000));
+                    if (schema.name().equals(Timestamp.SCHEMA_NAME)) {
+                        return TimestampData.fromEpochMillis((Long) dbzObj);
+                    } else if (schema.name().equals(MicroTimestamp.SCHEMA_NAME)) {
+                        long micro = (long) dbzObj;
+                        return TimestampData.fromEpochMillis(
+                                micro / 1000, (int) (micro % 1000 * 1000));
+                    } else if (schema.name().equals(NanoTimestamp.SCHEMA_NAME)) {
+                        long nano = (long) dbzObj;
+                        return TimestampData.fromEpochMillis(
+                                nano / 1000_000, (int) (nano % 1000_000));
                     }
                 }
                 LocalDateTime localDateTime =
