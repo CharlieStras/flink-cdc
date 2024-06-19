@@ -77,9 +77,9 @@ public enum MySqlReadableMetadata {
                 @Override
                 public Object read(SourceRecord record) {
                     Struct messageStruct = (Struct) record.value();
-                    Struct sourceStruct = messageStruct.getStruct(Envelope.FieldName.SOURCE);
+
                     return TimestampData.fromEpochMillis(
-                            (Long) sourceStruct.get(AbstractSourceInfo.TIMESTAMP_KEY));
+                            (Long) messageStruct.get(AbstractSourceInfo.TIMESTAMP_KEY));
                 }
             }),
 
